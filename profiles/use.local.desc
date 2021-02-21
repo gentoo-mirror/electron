@@ -5,6 +5,8 @@
 dev-util/electron:clang - Use Clang compiler instead of GCC
 dev-util/electron:closure-compile - Enable closure type-checking for Chrome's web technology-based UI. Requires Java.
 dev-util/electron:component-build - Split build into more shared libraries to speed up linking. Mostly intended for debugging and development, NOT RECOMMENDED for general use.
+dev-util/electron:headless - Build Ozone only with headless backend, NOT RECOMMENDED for general use.
+dev-util/electron:js-type-check - Enable JavaScript type-checking for Chrome's web technology-based UI. Requires Java.
 dev-util/electron:jumbo-build - Combine source files to speed up build process.
 dev-util/electron:lto - Build with link time optimization enabled
 dev-util/electron:pic - Disable optimized assembly code that is not PIC friendly
