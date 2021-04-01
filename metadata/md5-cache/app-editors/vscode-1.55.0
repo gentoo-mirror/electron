@@ -1,0 +1,15 @@
+BDEPEND=|| ( dev-lang/python:3.9 dev-lang/python:3.8 dev-lang/python:3.7 ) >=dev-util/electron-11.2.3:11.2 >=app-arch/rpm2targz-9.0.0.3g
+DEFINED_PHASES=compile configure install postinst postrm prepare setup unpack
+DEPEND=>=app-crypt/libsecret-0.18.6:= >=app-text/hunspell-1.3.3:= >=dev-db/sqlite-3.24:= >=dev-libs/glib-2.52.0:= >=dev-libs/libgit2-0.23:=[ssh] >=dev-libs/libpcre2-10.22:=[jit,pcre16] x11-libs/libX11 x11-libs/libxkbfile
+DESCRIPTION=Visual Studio Code
+EAPI=7
+HOMEPAGE=https://code.visualstudio.com/
+INHERIT=multiprocessing python-any-r1 rpm xdg-utils
+KEYWORDS=~amd64
+LICENSE=MS-vscode
+RDEPEND=>=app-crypt/libsecret-0.18.6:= >=app-text/hunspell-1.3.3:= >=dev-db/sqlite-3.24:= >=dev-libs/glib-2.52.0:= >=dev-libs/libgit2-0.23:=[ssh] >=dev-libs/libpcre2-10.22:=[jit,pcre16] x11-libs/libX11 x11-libs/libxkbfile >=dev-util/ctags-5.8 >=dev-util/electron-11.2.3:11.2 dev-vcs/git sys-apps/ripgrep
+RESTRICT=mirror bindist
+SLOT=0
+SRC_URI=https://update.code.visualstudio.com/1.55.0/linux-rpm-x64/stable -> vscode-x64-1.55.0.rpm https://github.com/elprans/asar/releases/download/v0.14.3-gentoo/asar-build.tar.gz -> asar-0.14.3.tar.gz https://github.com/nodejs/nan/archive/v2.14.2.tar.gz -> nodejs-nan-2.14.2.tar.gz https://github.com/nodejs/node-addon-api/archive/3.0.2.tar.gz -> nodejs-node-addon-api-3.0.2.tar.gz https://registry.npmjs.org/keytar/-/keytar-7.2.0.tgz -> vscodedep-keytar-7.2.0.tar.gz https://registry.npmjs.org/native-is-elevated/-/native-is-elevated-0.4.1.tgz -> vscodedep-native-is-elevated-0.4.1.tar.gz https://registry.npmjs.org/native-keymap/-/native-keymap-2.2.1.tgz -> vscodedep-native-keymap-2.2.1.tar.gz https://registry.npmjs.org/native-watchdog/-/native-watchdog-1.3.0.tgz -> vscodedep-native-watchdog-1.3.0.tar.gz https://registry.npmjs.org/node-pty/-/node-pty-0.10.0-beta19.tgz -> vscodedep-node-pty-0.10.0-beta19.tar.gz https://registry.npmjs.org/spdlog/-/spdlog-0.11.1.tgz -> vscodedep-spdlog-0.11.1.tar.gz https://registry.npmjs.org/vscode-sqlite3/-/vscode-sqlite3-4.0.10.tgz -> vscodedep-vscode-sqlite3-4.0.10.tar.gz
+_eclasses_=multiprocessing	cac3169468f893670dac3e7cb940e045	toolchain-funcs	24921b57d6561d87cbef4916a296ada4	multilib	d410501a125f99ffb560b0c523cd3d1e	python-utils-r1	543b53e4d003ebd889082f4673e52af5	python-any-r1	690a993463cd2ebcde40ccdf1bd9ba98	estack	055c42df72f76a4f45ec92b35e83cd56	edos2unix	33e347e171066657f91f8b0c72ec8773	l10n	8cdd85e169b835d518bc2fd59f780d8e	wrapper	4251d4c84c25f59094fd557e0063a974	eutils	2d5b3f4b315094768576b6799e4f926e	rpm	760ff223c2c4299b68ea901e24c4cabd	xdg-utils	ff2ff954e6b17929574eee4efc5152ba
+_md5_=bf56ffba59e2a397abdc0e7f8ea39af5
