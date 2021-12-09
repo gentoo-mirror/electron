@@ -12,4 +12,3 @@ dev-util/electron:proprietary-codecs - Enable proprietary codecs like H.264, MP3
 dev-util/electron:screencast - Enable support for remote desktop and screen cast using media-video/pipewire
 dev-util/electron:system-ffmpeg - Use system ffmpeg instead of the bundled one
 dev-util/electron:system-icu - Use system icu instead of the bundled one
-dev-util/electron:tcmalloc - Use bundled tcmalloc instead of system malloc
