@@ -4,6 +4,7 @@
 
 dev-util/electron:clang - Use Clang compiler instead of GCC
 dev-util/electron:component-build - Split build into more shared libraries to speed up linking. Mostly intended for debugging and development, NOT RECOMMENDED for general use.
+dev-util/electron:gtk4 - Build with GTK4 headers.
 dev-util/electron:headless - Build Ozone only with headless backend, NOT RECOMMENDED for general use.
 dev-util/electron:js-type-check - Enable JavaScript type-checking for Chrome's web technology-based UI. Requires Java.
 dev-util/electron:lto - Build with link time optimization enabled
@@ -11,4 +12,6 @@ dev-util/electron:pic - Disable optimized assembly code that is not PIC friendly
 dev-util/electron:proprietary-codecs - Enable proprietary codecs like H.264, MP3
 dev-util/electron:screencast - Enable support for remote desktop and screen cast using media-video/pipewire
 dev-util/electron:system-ffmpeg - Use system ffmpeg instead of the bundled one
+dev-util/electron:system-harfbuzz - Use system harfbuzz instead of the bundled one.
 dev-util/electron:system-icu - Use system icu instead of the bundled one
+dev-util/electron:system-png - Use system libpng instead of the bundled one.
