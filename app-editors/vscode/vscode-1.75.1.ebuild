@@ -8,8 +8,8 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{8..11} )
-inherit multiprocessing python-any-r1 rpm xdg-utils
+PYTHON_COMPAT=( python3_{9..11} )
+inherit desktop multiprocessing python-any-r1 rpm xdg-utils
 
 DESCRIPTION="Visual Studio Code"
 HOMEPAGE="https://code.visualstudio.com/"
@@ -27,7 +27,7 @@ ELECTRON_SLOT=19.1
 
 ASAR_V=0.14.3
 # All binary packages depend on this
-NAN_V=2.16.0
+NAN_V=2.17.0
 NODE_ADDON_API_V=5.0.0
 
 VSCODE__SQLITE3_V=5.1.2-vscode
@@ -35,9 +35,9 @@ KEYTAR_V=7.9.0
 NATIVE_IS_ELEVATED_V=0.4.3
 NATIVE_KEYMAP_V=3.3.2
 NATIVE_WATCHDOG_V=1.4.1
-NODE_PTY_V=0.11.0-beta11
+NODE_PTY_V=0.11.0-beta27
 SPDLOG_V=0.13.7
-VSCODE_POLICY_WATCHER_V=1.1.1
+VSCODE_POLICY_WATCHER_V=1.1.2
 
 # The x86_64 arch below is irrelevant, as we will rebuild all binary packages.
 SRC_URI="
@@ -50,9 +50,9 @@ SRC_URI="
 	https://registry.npmjs.org/native-is-elevated/-/native-is-elevated-0.4.3.tgz -> vscodedep-native-is-elevated-${NATIVE_IS_ELEVATED_V}.tar.gz
 	https://registry.npmjs.org/native-keymap/-/native-keymap-3.3.2.tgz -> vscodedep-native-keymap-${NATIVE_KEYMAP_V}.tar.gz
 	https://registry.npmjs.org/native-watchdog/-/native-watchdog-1.4.1.tgz -> vscodedep-native-watchdog-${NATIVE_WATCHDOG_V}.tar.gz
-	https://registry.npmjs.org/node-pty/-/node-pty-0.11.0-beta11.tgz -> vscodedep-node-pty-${NODE_PTY_V}.tar.gz
+	https://registry.npmjs.org/node-pty/-/node-pty-0.11.0-beta27.tgz -> vscodedep-node-pty-${NODE_PTY_V}.tar.gz
 	https://registry.npmjs.org/spdlog/-/spdlog-0.13.7.tgz -> vscodedep-spdlog-${SPDLOG_V}.tar.gz
-	https://registry.npmjs.org/vscode-policy-watcher/-/vscode-policy-watcher-1.1.1.tgz -> vscodedep-vscode-policy-watcher-${VSCODE_POLICY_WATCHER_V}.tar.gz
+	https://registry.npmjs.org/vscode-policy-watcher/-/vscode-policy-watcher-1.1.2.tgz -> vscodedep-vscode-policy-watcher-${VSCODE_POLICY_WATCHER_V}.tar.gz
 "
 
 BINMODS=(
@@ -302,8 +302,7 @@ src_install() {
 	newins "${BIN_S}/usr/share/applications/$(get_vscode_appname).desktop" \
 		"vscode${suffix}.desktop"
 
-	insinto "/usr/share/pixmaps/"
-	doins -r "${BIN_S}/usr/share/pixmaps/com.visualstudio.code.png"
+	doicon "${BIN_S}/usr/share/pixmaps/vscode.png"
 
 	exeinto "${install_dir}"
 	newexe "${BUILD_DIR}/app/code" code
@@ -317,11 +316,13 @@ src_install() {
 
 pkg_postinst() {
 	xdg_desktop_database_update
+	xdg_icon_cache_update
 	xdg_mimeinfo_database_update
 }
 
 pkg_postrm() {
 	xdg_desktop_database_update
+	xdg_icon_cache_update
 	xdg_mimeinfo_database_update
 }
 

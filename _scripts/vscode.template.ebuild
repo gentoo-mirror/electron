@@ -8,7 +8,7 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{8..11} )
+PYTHON_COMPAT=( python3_{9..11} )
 inherit desktop multiprocessing python-any-r1 rpm xdg-utils
 
 DESCRIPTION="Visual Studio Code"
@@ -281,7 +281,7 @@ src_install() {
 	newins "${BIN_S}/usr/share/applications/$(get_vscode_appname).desktop" \
 		"vscode${suffix}.desktop"
 
-	doicon "${BIN_S}/usr/share/pixmaps/com.visualstudio.code.png"
+	doicon "${BIN_S}/usr/share/pixmaps/vscode.png"
 
 	exeinto "${install_dir}"
 	newexe "${BUILD_DIR}/app/code" code
