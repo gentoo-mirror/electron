@@ -3,20 +3,18 @@
 
 EAPI=8
 
-# Can't do 12 yet: heavy use of imp, among other things (bug #915001, bug #915062)
-PYTHON_COMPAT=( python3_{10..11} )
+PYTHON_COMPAT=( python3_{11..12} )
 PYTHON_REQ_USE="xml(+)"
 
 # These variables let us easily bound supported major dependency versions in one place.
 GCC_MIN_VER=12
-GN_MIN_VER=0.2143
-LLVM_MAX_SLOT=17
-LLVM_MIN_SLOT=16
+GN_MIN_VER=0.2154
+LLVM_MAX_SLOT=19
+LLVM_MIN_SLOT=17
 RUST_MIN_VER=1.72.0
-# grep 'CLANG_REVISION = ' ${S}/tools/clang/scripts/update.py -A1 | cut -c 18-
-GOOGLE_CLANG_VER="llvmorg-18-init-16072-gc4146121e940-5"
-# grep 'RUST_REVISION = ' ${S}/tools/rust/update_rust.py -A1 | cut -c 17-
-GOOGLE_RUST_VER="df0295f07175acc7325ce3ca4152eb05752af1f2-5"
+# chromium-tools/get-chromium-toolchain-strings.sh
+GOOGLE_CLANG_VER=llvmorg-19-init-2941-ga0b3dbaf-22
+GOOGLE_RUST_VER=7168c13579a550f2c47f7eea22f5e226a436cd00-1
 
 # https://bugs.chromium.org/p/v8/issues/detail?id=14449 - V8 used in 120 can't build with GCC
 : ${CHROMIUM_FORCE_CLANG=yes}
@@ -34,14 +32,14 @@ CHROMIUM_LANGS="af am ar bg bn ca cs da de el en-GB es es-419 et fa fi fil fr gu
 	hi hr hu id it ja kn ko lt lv ml mr ms nb nl pl pt-BR pt-PT ro ru sk sl sr
 	sv sw ta te th tr uk ur vi zh-CN zh-TW"
 
-inherit check-reqs chromium-2 flag-o-matic llvm ninja-utils pax-utils
+inherit check-reqs chromium-2 desktop flag-o-matic llvm ninja-utils pax-utils
 inherit	python-any-r1 qmake-utils toolchain-funcs virtualx xdg-utils
 
 # Keep this in sync with DEPS:chromium_version
-CHROMIUM_VERSION="122.0.6261.130"
+CHROMIUM_VERSION="124.0.6367.207"
 
 # Keep this in sync with DEPS:node_version
-NODE_VERSION="20.9.0"
+NODE_VERSION="20.16.0"
 
 # Keep this in sync with DEPS:nan_version
 NAN_VERSION="2.19.0"
@@ -53,7 +51,7 @@ NODE_P="node-${NODE_VERSION}"
 
 DESCRIPTION="Cross platform application development framework based on web technologies"
 HOMEPAGE="https://electronjs.org/"
-CHROMIUM_PATCH_V="${CHROMIUM_VERSION%%\.*}-2"
+CHROMIUM_PATCH_V="${CHROMIUM_VERSION%%\.*}"
 SRC_URI="
 	system-toolchain? (
 		https://gitlab.com/Matt.Jolly/chromium-patches/-/archive/${CHROMIUM_PATCH_V}/chromium-patches-${CHROMIUM_PATCH_V}.tar.bz2
@@ -61,7 +59,7 @@ SRC_URI="
 	!system-toolchain? (
 		https://commondatastorage.googleapis.com/chromium-browser-clang/Linux_x64/clang-${GOOGLE_CLANG_VER}.tar.xz
 			-> chromium-${PV%%\.*}-clang.tar.xz
-		https://commondatastorage.googleapis.com/chromium-browser-clang/Linux_x64/rust-toolchain-${GOOGLE_RUST_VER}-${GOOGLE_CLANG_VER%??}.tar.xz
+		https://commondatastorage.googleapis.com/chromium-browser-clang/Linux_x64/rust-toolchain-${GOOGLE_RUST_VER}-${GOOGLE_CLANG_VER%???}.tar.xz
 			-> chromium-${PV%%\.*}-rust.tar.xz
 	)
 	pgo? ( https://github.com/elkablo/chromium-profiler/releases/download/v0.2/chromium-profiler-0.2.tar )
@@ -94,7 +92,7 @@ SRC_URI+="
 	https://registry.yarnpkg.com/@electron/get/-/get-2.0.2.tgz -> electron-dep-@electron-get-2.0.2.tgz
 	https://registry.yarnpkg.com/@electron/github-app-auth/-/github-app-auth-2.0.0.tgz -> electron-dep-@electron-github-app-auth-2.0.0.tgz
 	https://registry.yarnpkg.com/@electron/lint-roller/-/lint-roller-1.12.1.tgz -> electron-dep-@electron-lint-roller-1.12.1.tgz
-	https://registry.yarnpkg.com/@electron/typescript-definitions/-/typescript-definitions-8.15.2.tgz -> electron-dep-@electron-typescript-definitions-8.15.2.tgz
+	https://registry.yarnpkg.com/@electron/typescript-definitions/-/typescript-definitions-8.15.6.tgz -> electron-dep-@electron-typescript-definitions-8.15.6.tgz
 	https://registry.yarnpkg.com/@eslint-community/eslint-utils/-/eslint-utils-4.4.0.tgz -> electron-dep-@eslint-community-eslint-utils-4.4.0.tgz
 	https://registry.yarnpkg.com/@eslint-community/regexpp/-/regexpp-4.5.1.tgz -> electron-dep-@eslint-community-regexpp-4.5.1.tgz
 	https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-2.0.3.tgz -> electron-dep-@eslint-eslintrc-2.0.3.tgz
@@ -169,7 +167,6 @@ SRC_URI+="
 	https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz -> electron-dep-@types-events-3.0.0.tgz
 	https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.17.28.tgz -> electron-dep-@types-express-serve-static-core-4.17.28.tgz
 	https://registry.yarnpkg.com/@types/express/-/express-4.17.13.tgz -> electron-dep-@types-express-4.17.13.tgz
-	https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-9.0.1.tgz -> electron-dep-@types-fs-extra-9.0.1.tgz
 	https://registry.yarnpkg.com/@types/glob/-/glob-7.1.1.tgz -> electron-dep-@types-glob-7.1.1.tgz
 	https://registry.yarnpkg.com/@types/http-cache-semantics/-/http-cache-semantics-4.0.1.tgz -> electron-dep-@types-http-cache-semantics-4.0.1.tgz
 	https://registry.yarnpkg.com/@types/is-empty/-/is-empty-1.2.0.tgz -> electron-dep-@types-is-empty-1.2.0.tgz
@@ -181,7 +178,6 @@ SRC_URI+="
 	https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz -> electron-dep-@types-json5-0.0.29.tgz
 	https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-9.0.1.tgz -> electron-dep-@types-jsonwebtoken-9.0.1.tgz
 	https://registry.yarnpkg.com/@types/keyv/-/keyv-3.1.4.tgz -> electron-dep-@types-keyv-3.1.4.tgz
-	https://registry.yarnpkg.com/@types/klaw/-/klaw-3.0.1.tgz -> electron-dep-@types-klaw-3.0.1.tgz
 	https://registry.yarnpkg.com/@types/linkify-it/-/linkify-it-2.1.0.tgz -> electron-dep-@types-linkify-it-2.1.0.tgz
 	https://registry.yarnpkg.com/@types/markdown-it/-/markdown-it-12.2.3.tgz -> electron-dep-@types-markdown-it-12.2.3.tgz
 	https://registry.yarnpkg.com/@types/mdast/-/mdast-3.0.7.tgz -> electron-dep-@types-mdast-3.0.7.tgz
@@ -283,7 +279,6 @@ SRC_URI+="
 	https://registry.yarnpkg.com/astral-regex/-/astral-regex-2.0.0.tgz -> electron-dep--astral-regex-2.0.0.tgz
 	https://registry.yarnpkg.com/async/-/async-3.2.4.tgz -> electron-dep--async-3.2.4.tgz
 	https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz -> electron-dep--asynckit-0.4.0.tgz
-	https://registry.yarnpkg.com/at-least-node/-/at-least-node-1.0.0.tgz -> electron-dep--at-least-node-1.0.0.tgz
 	https://registry.yarnpkg.com/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz -> electron-dep--available-typed-arrays-1.0.5.tgz
 	https://registry.yarnpkg.com/bail/-/bail-2.0.1.tgz -> electron-dep--bail-2.0.1.tgz
 	https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz -> electron-dep--balanced-match-1.0.2.tgz
@@ -485,7 +480,6 @@ SRC_URI+="
 	https://registry.yarnpkg.com/fs-extra/-/fs-extra-10.1.0.tgz -> electron-dep--fs-extra-10.1.0.tgz
 	https://registry.yarnpkg.com/fs-extra/-/fs-extra-7.0.1.tgz -> electron-dep--fs-extra-7.0.1.tgz
 	https://registry.yarnpkg.com/fs-extra/-/fs-extra-8.1.0.tgz -> electron-dep--fs-extra-8.1.0.tgz
-	https://registry.yarnpkg.com/fs-extra/-/fs-extra-9.0.1.tgz -> electron-dep--fs-extra-9.0.1.tgz
 	https://registry.yarnpkg.com/fs-minipass/-/fs-minipass-2.1.0.tgz -> electron-dep--fs-minipass-2.1.0.tgz
 	https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz -> electron-dep--fs.realpath-1.0.0.tgz
 	https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz -> electron-dep--fsevents-2.3.2.tgz
@@ -618,7 +612,6 @@ SRC_URI+="
 	https://registry.yarnpkg.com/jws/-/jws-3.2.2.tgz -> electron-dep--jws-3.2.2.tgz
 	https://registry.yarnpkg.com/keyv/-/keyv-4.3.1.tgz -> electron-dep--keyv-4.3.1.tgz
 	https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz -> electron-dep--kind-of-6.0.3.tgz
-	https://registry.yarnpkg.com/klaw/-/klaw-3.0.0.tgz -> electron-dep--klaw-3.0.0.tgz
 	https://registry.yarnpkg.com/kleur/-/kleur-4.1.5.tgz -> electron-dep--kleur-4.1.5.tgz
 	https://registry.yarnpkg.com/levn/-/levn-0.4.1.tgz -> electron-dep--levn-0.4.1.tgz
 	https://registry.yarnpkg.com/libnpmconfig/-/libnpmconfig-1.2.1.tgz -> electron-dep--libnpmconfig-1.2.1.tgz
@@ -719,6 +712,7 @@ SRC_URI+="
 	https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz -> electron-dep--ms-2.1.2.tgz
 	https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz -> electron-dep--ms-2.1.3.tgz
 	https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz -> electron-dep--mute-stream-0.0.8.tgz
+	https://registry.yarnpkg.com/nan/-/nan-2.19.0.tgz -> electron-dep--nan-2.19.0.tgz
 	https://registry.yarnpkg.com/natural-compare-lite/-/natural-compare-lite-1.4.0.tgz -> electron-dep--natural-compare-lite-1.4.0.tgz
 	https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz -> electron-dep--natural-compare-1.4.0.tgz
 	https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.3.tgz -> electron-dep--negotiator-0.6.3.tgz
@@ -1074,18 +1068,14 @@ SRC_URI+="
 "
 
 declare -A CHROMIUM_COMMITS=(
-	"b6df4d75ada110883fcc194e7b6eb52aea7f522b"
-	"e8e7c38ed76d20abcb4def81196eb9fd32772ea9"
-	"-b4d62daa178298eaa6fc8b9bc7ec6835c95ad86e"
-	"8d253767f895b45053c39ea99a8f02bbe7071d3a"
-	"e189c46f1ee584c1721ccfecb38bd8db84b58d5b"
-	"04866680f4f9a8475ae3795ad6ed59649ba478d7"
-	"4b48bc4dd6ce9c56d254e552a33a7b7c2d6fc226"
-	"5b2d53797e5580cbfea00d732fe25a97c7048b5b"
-	"3a75d7f8dc3a08a38dd893031f8996b91a00764b"
-	"214859e3567ea9def85305e4f021a5d407e1ccfe"
-	"0fc99662b6f4e92dc13626b5b637fe24d01dbc9a"
-	"496297fa1be912504d5091af8093f23abf9d77d2"
+	"df291ec5472fa14e828633378b8c97a8c7a2e7de"
+	"59843523390481e52d3a397687a09a7582c44114"
+	"072b9f3bc340020325cf3dd7bff1991cd22de171"
+	"8be4d17beb71c29118c3337268f3e7b3930a657f"
+	"b3330cb62d7be253a5b99e40b88e2290c329ac08"
+	"15e24abc1646ad9984923234a041cd0c3b8b1607"
+	"23646607e16c63231ae9f49ce5355c270145cf30"
+	"37ef38092ab783d0126922e8d463024341c481b9"
 )
 
 if [ ! -z "${CHROMIUM_COMMITS[*]}" ]; then
@@ -1101,16 +1091,22 @@ NODE_S="${S}/third_party/electron_node"
 LICENSE="BSD"
 SLOT="$(ver_cut 1)/$(ver_cut 2-)"
 KEYWORDS="~amd64 ~arm64"
-IUSE_SYSTEM_LIBS="+system-harfbuzz +system-icu +system-png +system-zstd"
-IUSE="+X ${IUSE_SYSTEM_LIBS} custom-cflags cups debug gtk4 -hangouts headless
-kerberos libcxx lto +official pax-kernel pgo +proprietary-codecs pulseaudio
-qt5 qt6 screencast selinux +system-toolchain vaapi wayland"
+IUSE_SYSTEM_LIBS="system-abseil-cpp system-av1 system-brotli system-crc32c
+system-double-conversion system-ffmpeg +system-harfbuzz +system-icu
+system-jsoncpp +system-libevent +system-libusb system-libvpx +system-openh264
+system-openjpeg +system-png system-re2 system-snappy system-woff2 +system-zstd"
+IUSE="+X ${IUSE_SYSTEM_LIBS} bindist cups custom-cflags debug ffmpeg-chromium
+gtk4 -hangouts headless kerberos libcxx +lto +official pax-kernel pgo
++proprietary-codecs pulseaudio qt5 qt6 +screencast selinux +system-toolchain
++vaapi +wayland"
+IUSE+=" video_cards_nvidia"
 REQUIRED_USE="
 	!headless? ( || ( X wayland ) )
 	pgo? ( X !wayland )
 	qt6? ( qt5 )
 	screencast? ( wayland )
 	!system-toolchain? ( libcxx )
+	ffmpeg-chromium? ( bindist proprietary-codecs )
 "
 
 COMMON_X_DEPEND="
@@ -1126,6 +1122,18 @@ COMMON_X_DEPEND="
 "
 
 COMMON_SNAPSHOT_DEPEND="
+	system-abseil-cpp? ( >=dev-cpp/abseil-cpp-20230125.2 )
+	system-brotli? ( >=app-arch/brotli-9999 )
+	system-crc32c? ( dev-libs/crc32c )
+	system-double-conversion? ( dev-libs/double-conversion )
+	system-woff2? ( media-libs/woff2 )
+	system-snappy? ( app-arch/snappy )
+	system-jsoncpp? ( dev-libs/jsoncpp )
+	system-libevent? ( dev-libs/libevent )
+	system-openjpeg? ( media-libs/openjpeg:2= )
+	system-re2? ( >=dev-libs/re2-0.2019.08.01:= )
+	system-libvpx? ( >=media-libs/libvpx-1.13.0:=[postproc] )
+	system-libusb? ( virtual/libusb:1 )
 	system-icu? ( >=dev-libs/icu-71.1:= )
 	>=dev-libs/libxml2-2.12.4:=[icu]
 	dev-libs/nspr:=
@@ -1140,6 +1148,10 @@ COMMON_SNAPSHOT_DEPEND="
 	>=media-libs/libwebp-0.4.0:=
 	media-libs/mesa:=[gbm(+)]
 	>=media-libs/openh264-1.6.0:=
+	system-av1? (
+		>=media-libs/dav1d-1.0.0:=
+		>=media-libs/libaom-3.7.0:=
+	)
 	sys-libs/zlib:=
 	x11-libs/libdrm:=
 	!headless? (
@@ -1199,6 +1211,10 @@ RDEPEND="${COMMON_DEPEND}
 	)
 	virtual/ttf-fonts
 	selinux? ( sec-policy/selinux-chromium )
+	bindist? (
+		!ffmpeg-chromium? ( >=media-video/ffmpeg-6.1-r1:0/58.60.60[chromium] )
+		ffmpeg-chromium? ( media-video/ffmpeg-chromium:${PV%%\.*} )
+	)
 "
 DEPEND="${COMMON_DEPEND}
 	!headless? (
@@ -1349,36 +1365,45 @@ pkg_pretend() {
 			use ${myiuse} && ewarn "Ignoring USE=${myiuse} since USE=headless is set."
 		done
 	fi
+
+	if ! use bindist && use ffmpeg-chromium; then
+		ewarn "Ignoring USE=ffmpeg-chromium, USE=bindist is not set."
+	fi
 }
 
 pkg_setup() {
-	if use system-toolchain && needs_clang; then
-		llvm_pkg_setup
-	fi
+	if [[ ${MERGE_TYPE} != binary ]]; then
+		# The pre_build_checks are all about compilation resources, no need to run it for a binpkg
+		pre_build_checks
 
-	pre_build_checks
-
-	if [[ ${MERGE_TYPE} != binary ]] && use system-toolchain; then
-		local -x CPP="$(tc-getCXX) -E"
-		if tc-is-gcc && ! ver_test "$(gcc-version)" -ge ${GCC_MIN_VER}; then
-			die "At least gcc ${GCC_MIN_VER} is required"
-		fi
-		if use pgo && tc-is-cross-compiler; then
-			die "The pgo USE flag cannot be used when cross-compiling"
-		fi
-		if needs_clang && ! tc-is-clang; then
-			if tc-is-cross-compiler; then
-				CPP="${CBUILD}-clang++ -E"
-			else
-				CPP="${CHOST}-clang++ -E"
+		if use system-toolchain; then
+			local -x CPP="$(tc-getCXX) -E"
+			if tc-is-gcc && ! ver_test "$(gcc-version)" -ge ${GCC_MIN_VER}; then
+				die "At least gcc ${GCC_MIN_VER} is required"
 			fi
-			if ver_test "$(clang-major-version)" -lt ${LLVM_MIN_SLOT}; then
-				die "At least Clang ${LLVM_MIN_SLOT} is required"
+			if use pgo && tc-is-cross-compiler; then
+				die "The pgo USE flag cannot be used when cross-compiling"
+			fi
+			if needs_clang && ! tc-is-clang; then
+				if tc-is-cross-compiler; then
+					CPP="${CBUILD}-clang++ -E"
+				else
+					CPP="${CHOST}-clang++ -E"
+				fi
+			fi
+			if needs_clang || tc-is-clang; then
+				if ver_test "$(clang-major-version)" -lt ${LLVM_MIN_SLOT}; then
+					die "At least Clang ${LLVM_MIN_SLOT} is required"
+				fi
+				# Ideally we never see this, but it should help prevent bugs like 927154
+				if ver_test "$(clang-major-version)" -gt ${LLVM_MAX_SLOT}; then
+					die "Clang $(clang-major-version) is too new; ${LLVM_MAX_SLOT} is the highest supported version"
+				fi
 			fi
 		fi
 		# Users should never hit this, it's purely a development convenience
 		if ver_test $(gn --version || die) -lt ${GN_MIN_VER}; then
-				die "dev-util/gn >= ${GN_MIN_VER} is required to build this Chromium"
+			die "dev-build/gn >= ${GN_MIN_VER} is required to build this Chromium"
 		fi
 	fi
 
@@ -1453,9 +1478,10 @@ src_prepare() {
 	# Electron's scripts expect the top dir to be called src/"
 	rm -f "${WORKDIR}/src" || die
 	ln -s "${S}" "${WORKDIR}/src" || die
-	mkdir -p "${NODE_S}/" || die
-	rsync -a "${WORKDIR}/${NODE_P}/" "${NODE_S}/" || die
-	rsync -a "${WORKDIR}/${P}/" "${S}/electron/" || die
+	rm -f "${NODE_S}" || die
+	ln -s "${WORKDIR}/${NODE_P}/" "${NODE_S}" || die
+	rm -f "${S}/electron" || die
+	ln -s "${WORKDIR}/${P}/" "${S}/electron" || die
 
 	# Apply Electron patches.
 	cd "${S}/electron" || die
@@ -1548,10 +1574,11 @@ src_prepare() {
 	local PATCHES=(
 		"${FILESDIR}/chromium-cross-compile.patch"
 		"${FILESDIR}/chromium-use-oauth2-client-switches-as-default.patch"
-		"${FILESDIR}/chromium-108-EnumTable-crash.patch"
 		"${FILESDIR}/chromium-109-system-zlib.patch"
 		"${FILESDIR}/chromium-111-InkDropHost-crash.patch"
 		"${FILESDIR}/chromium-117-system-zstd.patch"
+		"${FILESDIR}/chromium-124-libwebp-shim-sharpyuv.patch"
+		"${FILESDIR}/chromium-125-ninja-1-12.patch"
 	)
 
 	if use system-toolchain; then
@@ -1572,10 +1599,6 @@ src_prepare() {
 			"${WORKDIR}"/rust-toolchain/INSTALLED_VERSION || die "Failed to set rust version"
 	fi
 
-	if has_version ">=dev-libs/icu-74.1" && use system-icu ; then
-		PATCHES+=( "${FILESDIR}/chromium-119.0.6045.159-icu-74.patch" )
-	fi
-
 	default
 
 	mkdir -p third_party/node/linux/node-linux-x64/bin || die
@@ -1586,9 +1609,12 @@ src_prepare() {
 	sed -i -e "s|\(^script_executable = \).*|\1\"${EPYTHON}\"|g" .gn || die
 
 	local keeplibs=(
-		third_party/electron_node
 		base/third_party/cityhash
+	)
+	use system-double-conversion || keeplibs+=(
 		base/third_party/double_conversion
+	)
+	keeplibs+=(
 		base/third_party/dynamic_annotations
 		base/third_party/icu
 		base/third_party/nspr
@@ -1604,11 +1630,21 @@ src_prepare() {
 		net/third_party/nss
 		net/third_party/quic
 		net/third_party/uri_template
+		third_party/abseil-cpp/absl/base
+	)
+	use system-abseil-cpp || keeplibs+=(
 		third_party/abseil-cpp
+	)
+	keeplibs+=(
 		third_party/angle
 		third_party/angle/src/common/third_party/xxhash
+		third_party/angle/src/libANGLE/renderer/vulkan/shaders/src/third_party/ffx_spd
 		third_party/angle/src/third_party/ceval
+	)
+	use video_cards_nvidia || keeplibs+=(
 		third_party/angle/src/third_party/libXNVCtrl
+	)
+	keeplibs+=(
 		third_party/angle/src/third_party/volk
 		third_party/anonymous_tokens
 		third_party/apple_apsl
@@ -1619,7 +1655,11 @@ src_prepare() {
 		third_party/boringssl/src/third_party/fiat
 		third_party/breakpad
 		third_party/breakpad/breakpad/src/third_party/curl
+	)
+	use system-brotli || keeplibs+=(
 		third_party/brotli
+	)
+	keeplibs+=(
 		third_party/catapult
 		third_party/catapult/common/py_vulcanize/third_party/rcssmin
 		third_party/catapult/common/py_vulcanize/third_party/rjsmin
@@ -1642,10 +1682,13 @@ src_prepare() {
 		third_party/crashpad
 		third_party/crashpad/crashpad/third_party/lss
 		third_party/crashpad/crashpad/third_party/zlib
+	)
+	use system-crc32c || keeplibs+=(
 		third_party/crc32c
+	)
+	keeplibs+=(
 		third_party/cros_system_api
 		third_party/d3
-		third_party/dav1d
 		third_party/dawn
 		third_party/dawn/third_party/gn/webgpu-cts
 		third_party/dawn/third_party/khronos
@@ -1670,7 +1713,6 @@ src_prepare() {
 		third_party/devtools-frontend/src/front_end/third_party/puppeteer/package/lib/esm/third_party/rxjs
 		third_party/devtools-frontend/src/front_end/third_party/vscode.web-custom-data
 		third_party/devtools-frontend/src/front_end/third_party/wasmparser
-		third_party/devtools-frontend/src/test/unittests/front_end/third_party/i18n
 		third_party/devtools-frontend/src/third_party
 		third_party/distributed_point_functions
 		third_party/dom_distiller_js
@@ -1678,7 +1720,6 @@ src_prepare() {
 		third_party/emoji-segmenter
 		third_party/farmhash
 		third_party/fdlibm
-		third_party/ffmpeg
 		third_party/fft2d
 		third_party/flatbuffers
 		third_party/fp16
@@ -1699,18 +1740,21 @@ src_prepare() {
 		third_party/inspector_protocol
 		third_party/ipcz
 		third_party/jinja2
+	)
+	use system-jsoncpp || keeplibs+=(
 		third_party/jsoncpp
+	)
+	keeplibs+=(
 		third_party/jstemplate
 		third_party/khronos
 		third_party/leveldatabase
 		third_party/libaddressinput
-		third_party/libaom
-		third_party/libaom/source/libaom/third_party/fastfeat
-		third_party/libaom/source/libaom/third_party/SVT-AV1
-		third_party/libaom/source/libaom/third_party/vector
-		third_party/libaom/source/libaom/third_party/x86inc
 		third_party/libavif
+	)
+	use system-libevent || keeplibs+=(
 		third_party/libevent
+	)
+	keeplibs+=(
 		third_party/libgav1
 		third_party/libjingle
 		third_party/libphonenumber
@@ -1718,14 +1762,25 @@ src_prepare() {
 		third_party/libsrtp
 		third_party/libsync
 		third_party/libudev
+	)
+	use system-libusb || keeplibs+=(
+		third_party/libusb
+	)
+	keeplibs+=(
 		third_party/libva_protected_content
+	)
+	use system-libvpx || keeplibs+=(
 		third_party/libvpx
 		third_party/libvpx/source/libvpx/third_party/x86inc
+	)
+	keeplibs+=(
 		third_party/libwebm
 		third_party/libx11
 		third_party/libxcb-keysyms
 		third_party/libxml/chromium
 		third_party/libyuv
+		third_party/lit
+		third_party/llvm
 		third_party/lottie
 		third_party/lss
 		third_party/lzma_sdk
@@ -1748,15 +1803,17 @@ src_prepare() {
 		third_party/openscreen
 		third_party/openscreen/src/third_party/
 		third_party/openscreen/src/third_party/tinycbor/src/src
-		third_party/opus
 		third_party/ots
 		third_party/pdfium
 		third_party/pdfium/third_party/agg23
-		third_party/pdfium/third_party/base
 		third_party/pdfium/third_party/bigint
 		third_party/pdfium/third_party/freetype
 		third_party/pdfium/third_party/lcms
+	)
+	use system-openjpeg || keeplibs+=(
 		third_party/pdfium/third_party/libopenjpeg
+	)
+	keeplibs+=(
 		third_party/pdfium/third_party/libtiff
 		third_party/perfetto
 		third_party/perfetto/protos/third_party/chromium
@@ -1771,7 +1828,6 @@ src_prepare() {
 		third_party/pyjson5
 		third_party/pyyaml
 		third_party/qcms
-		third_party/re2
 		third_party/rnnoise
 		third_party/rust
 		third_party/s2cellid
@@ -1783,7 +1839,11 @@ src_prepare() {
 		third_party/skia/include/third_party/vulkan
 		third_party/skia/third_party/vulkan
 		third_party/smhasher
+	)
+	use system-snappy || keeplibs+=(
 		third_party/snappy
+	)
+	keeplibs+=(
 		third_party/sqlite
 		third_party/swiftshader
 		third_party/swiftshader/third_party/astc-encoder
@@ -1816,7 +1876,11 @@ src_prepare() {
 		third_party/webrtc/rtc_base/third_party/base64
 		third_party/webrtc/rtc_base/third_party/sigslot
 		third_party/widevine
+	)
+	use system-woff2 || keeplibs+=(
 		third_party/woff2
+	)
+	keeplibs+=(
 		third_party/wuffs
 		third_party/x11proto
 		third_party/xcbproto
@@ -1836,30 +1900,39 @@ src_prepare() {
 		third_party/usb_ids
 		third_party/xdg-utils
 	)
-
-	# USE=system-*
 	if ! use system-harfbuzz; then
 		keeplibs+=( third_party/harfbuzz-ng )
 	fi
-
+	if ! use system-ffmpeg; then
+		keeplibs+=( third_party/ffmpeg third_party/opus )
+	fi
 	if ! use system-icu; then
 		keeplibs+=( third_party/icu )
 	fi
-
 	if ! use system-png; then
 		keeplibs+=( third_party/libpng )
 	fi
-
 	if ! use system-zstd; then
 		keeplibs+=( third_party/zstd )
 	fi
-
+	if ! use system-av1; then
+		keeplibs+=(
+			third_party/dav1d
+			third_party/libaom
+			third_party/libaom/source/libaom/third_party/fastfeat
+			third_party/libaom/source/libaom/third_party/SVT-AV1
+			third_party/libaom/source/libaom/third_party/vector
+			third_party/libaom/source/libaom/third_party/x86inc
+		)
+	fi
 	if use libcxx || [[ ${CHROMIUM_FORCE_LIBCXX} == yes ]]; then
 		keeplibs+=( third_party/libc++ )
 	fi
-
-	if ! use system-toolchain || [[ ${CHROMIUM_FORCE_GOOGLE_TOOLCHAIN} == yes ]]; then
-			keeplibs+=( third_party/llvm )
+	if ! use system-openh264; then
+		keeplibs+=( third_party/openh264 )
+	fi
+	if ! use system-re2; then
+		keeplibs+=( third_party/re2 )
 	fi
 
 	# Arch-specific
@@ -1965,23 +2038,39 @@ electron_configure() {
 		local rustc_ver
 		rustc_ver=$(chromium_rust_version_check)
 		if ver_test "${rustc_ver}" -lt "${RUST_MIN_VER}"; then
-			eerror "Rust >=${RUST_MIN_VER} is required"
-			eerror "Please run 'eselect rust' and select the correct rust version"
-			die "Selected rust version is too old"
+				eerror "Rust >=${RUST_MIN_VER} is required"
+				eerror "Please run 'eselect rust' and select the correct rust version"
+				die "Selected rust version is too old"
 		else
-			einfo "Using rust ${rustc_ver} to build"
+				einfo "Using rust ${rustc_ver} to build"
 		fi
-		myconf_gn+=" rust_sysroot_absolute=\"${EPREFIX}/usr/lib/rust/${rustc_ver}/\""
+		if [[ "$(eselect --brief rust show 2>/dev/null)" == *"bin"* ]]; then
+				myconf_gn+=" rust_sysroot_absolute=\"${EPREFIX}/opt/rust-bin-${rustc_ver}/\""
+		else
+				myconf_gn+=" rust_sysroot_absolute=\"${EPREFIX}/usr/lib/rust/${rustc_ver}/\""
+		fi
 		myconf_gn+=" rustc_version=\"${rustc_ver}\""
 	fi
 
 	# GN needs explicit config for Debug/Release as opposed to inferring it from build directory.
-	myconf_gn+=" is_debug=false"
+	myconf_gn+=" is_debug=$(usex debug true false)"
 
 	# enable DCHECK with USE=debug only, increases chrome binary size by 30%, bug #811138.
 	# DCHECK is fatal by default, make it configurable at runtime, #bug 807881.
 	myconf_gn+=" dcheck_always_on=$(usex debug true false)"
 	myconf_gn+=" dcheck_is_configurable=$(usex debug true false)"
+
+	myconf_gn+=" enable_iterator_debugging=$(usex debug true false)"
+
+	if use debug; then
+		myconf_gn+=" symbol_level=2"
+		myconf_gn+=" blink_symbol_level=2"
+		myconf_gn+=" v8_symbol_level=2"
+	else
+		myconf_gn+=" symbol_level=0"
+		myconf_gn+=" blink_symbol_level=0"
+		myconf_gn+=" v8_symbol_level=0"
+	fi
 
 	# Component build isn't generally intended for use by end users. It's mostly useful
 	# for development and debugging.
@@ -1990,36 +2079,94 @@ electron_configure() {
 	# Disable nacl, we can't build without pnacl (http://crbug.com/269560).
 	myconf_gn+=" enable_nacl=false"
 
-	# Use system-provided libraries.
-	# TODO: freetype -- remove sources (https://bugs.chromium.org/p/pdfium/issues/detail?id=733).
-	# TODO: use_system_hunspell (upstream changes needed).
-	# TODO: use_system_protobuf (bug #525560).
-	# TODO: use_system_sqlite (http://crbug.com/22208).
-
-	# libevent: https://bugs.gentoo.org/593458
 	local gn_system_libraries=(
 		flac
 		fontconfig
 		freetype
-		# Need harfbuzz_from_pkgconfig target
-		#harfbuzz-ng
 		libdrm
 		libjpeg
 		libwebp
 		libxml
 		libxslt
-		openh264
 		zlib
 	)
+
+	if use system-abseil-cpp; then
+		gn_system_libraries+=(
+			absl_algorithm
+			absl_base
+			absl_cleanup
+			absl_container
+			absl_debugging
+			absl_flags
+			absl_functional
+			absl_hash
+			absl_log
+			absl_log_internal
+			absl_memory
+			absl_meta
+			absl_numeric
+			absl_random
+			absl_status
+			absl_strings
+			absl_synchronization
+			absl_time
+			absl_types
+			absl_utility
+		)
+	fi
+	if use system-brotli; then
+		gn_system_libraries+=( brotli )
+	fi
+	if use system-crc32c; then
+		gn_system_libraries+=( crc32c )
+	fi
+	if use system-double-conversion; then
+		gn_system_libraries+=( double-conversion )
+	fi
+	if use system-woff2; then
+		gn_system_libraries+=( woff2 )
+	fi
+	if use video_cards_nvidia; then
+		gn_system_libraries+=( libXNVCtrl )
+	fi
+	if use system-ffmpeg; then
+		gn_system_libraries+=( ffmpeg opus )
+	fi
+	if use system-jsoncpp; then
+		gn_system_libraries+=( jsoncpp )
+	fi
 	if use system-icu; then
 		gn_system_libraries+=( icu )
 	fi
 	if use system-png; then
 		gn_system_libraries+=( libpng )
+		myconf_gn+=" use_system_libpng=true"
 	fi
 	if use system-zstd; then
 		gn_system_libraries+=( zstd )
 	fi
+	if use system-av1; then
+		gn_system_libraries+=( dav1d libaom )
+	fi
+	if use system-libusb; then
+		gn_system_libraries+=( libusb )
+	fi
+	if use system-libvpx; then
+		gn_system_libraries+=( libvpx )
+	fi
+	if use system-libevent; then
+		gn_system_libraries+=( libevent )
+	fi
+	use system-openh264 && gn_system_libraries+=(
+		openh264
+	)
+	use system-re2 && gn_system_libraries+=(
+		re2
+	)
+	use system-snappy && gn_system_libraries+=(
+		snappy
+	)
 
 	build/linux/unbundle/replace_gn_files.py --system-libraries "${gn_system_libraries[@]}" || die
 
@@ -2077,9 +2224,19 @@ electron_configure() {
 	# Disable code formating of generated files
 	myconf_gn+=" blink_enable_generated_code_formatting=false"
 
-	ffmpeg_branding="$(usex proprietary-codecs Chrome Chromium)"
-	myconf_gn+=" proprietary_codecs=$(usex proprietary-codecs true false)"
-	myconf_gn+=" ffmpeg_branding=\"${ffmpeg_branding}\""
+	if use bindist ; then
+		# proprietary_codecs just forces Chromium to say that it can use h264/aac,
+		# the work is still done by ffmpeg. If this is set to no Chromium
+		# won't be able to load the codec even if the library can handle it
+		myconf_gn+=" proprietary_codecs=true"
+		myconf_gn+=" ffmpeg_branding=\"Chrome\""
+		# build ffmpeg as an external component (libffmpeg.so) that we can remove / substitute
+		myconf_gn+=" is_component_ffmpeg=true"
+	else
+		ffmpeg_branding="$(usex proprietary-codecs Chrome Chromium)"
+		myconf_gn+=" proprietary_codecs=$(usex proprietary-codecs true false)"
+		myconf_gn+=" ffmpeg_branding=\"${ffmpeg_branding}\""
+	fi
 
 	# Set up Google API keys, see http://www.chromium.org/developers/how-tos/api-keys .
 	# Note: these are for Gentoo use ONLY. For your own distribution,
@@ -2257,38 +2414,6 @@ electron_configure() {
 	myconf_gn+=" use_system_cares=true"
 	myconf_gn+=" use_system_nghttp2=true"
 
-	# cd "${NODE_S}" || die
-	# # --shared-libuv cannot be used as electron's node fork
-	# # patches uv_loop structure.
-	# local nodeconf=(
-	# 	--shared
-	# 	--without-bundled-v8
-	# 	--shared-openssl
-	# 	--shared-http-parser
-	# 	--shared-zlib
-	# 	--shared-nghttp2
-	# 	--shared-cares
-	# 	--without-npm
-	# 	--without-dtrace
-	# )
-
-	# use system-icu && nodeconf+=( --with-intl=system-icu ) || nodeconf+=( --with-intl=none )
-
-	# local nodearch=""
-	# case ${ABI} in
-	# 	amd64) nodearch="x64";;
-	# 	arm) nodearch="arm";;
-	# 	arm64) nodearch="arm64";;
-	# 	x32) nodearch="x32";;
-	# 	x86) nodearch="ia32";;
-	# 	*) nodearch="${ABI}";;
-	# esac
-
-	# "${EPYTHON}" configure.py \
-	# 	--prefix="" \
-	# 	--dest-cpu="${nodearch}" \
-	# 	"${nodeconf[@]}" || die
-
 	cd "${S}" || die
 
 	myconf_gn+=" override_electron_version=\"${PV}\""
@@ -2449,34 +2574,36 @@ src_install() {
 	newexe out/Release/chrome_sandbox chrome-sandbox
 	fperms 4755 "${install_dir}/chrome-sandbox"
 
-	# Shared libraries
-	insopts -m755
+	pushd out/Release/locales > /dev/null || die
+	chromium_remove_language_paks
+	popd > /dev/null || die
+
+	# Support files
+	insinto "${install_dir}"
+	doins out/Release/*.bin
+	doins out/Release/*.pak
+
+	if use bindist; then
+		# We built libffmpeg as a component library, but we can't distribute it
+		# with proprietary codec support. Remove it and make a symlink to the requested
+		# system library.
+		rm -f out/Release/libffmpeg.so \
+			|| die "Failed to remove bundled libffmpeg.so (with proprietary codecs)"
+		# symlink the libffmpeg.so from either ffmpeg-chromium or ffmpeg[chromium].
+		einfo "Creating symlink to libffmpeg.so from $(usex ffmpeg-chromium ffmpeg-chromium ffmpeg[chromium])..."
+		dosym ../chromium/libffmpeg.so$(usex ffmpeg-chromium .${PV%%\.*} "") \
+			/usr/$(get_libdir)/chromium-browser/libffmpeg.so
+	fi
+
 	(
 		shopt -s nullglob
 		local files=(out/Release/*.so out/Release/*.so.[0-9])
 		[[ ${#files[@]} -gt 0 ]] && doins "${files[@]}"
 	)
-	if [[ -d out/Release/swiftshader ]]; then
-		insinto "${install_dir}/swiftshader"
-		doins out/Release/swiftshader/*.so
-		insinto "${install_dir}"
-	fi
-	rm "${ED}/${install_dir}/libVkICD_mock_icd.so" || die
-	insopts -m644
-
-	# Support files
-	doins out/Release/*.bin
-	doins out/Release/*.pak
-    # Install vk_swiftshader_icd.json; bug #827861
-    doins out/Release/vk_swiftshader_icd.json
 
 	if ! use system-icu && ! use headless; then
 		doins out/Release/icudtl.dat
 	fi
-
-	pushd out/Release/locales > /dev/null || die
-	chromium_remove_language_paks
-	popd > /dev/null || die
 
 	insinto "${install_dir}"/locales
 	doins out/Release/locales/*.pak
@@ -2486,7 +2613,16 @@ src_install() {
 
 	doins out/Release/version
 
+    # Install vk_swiftshader_icd.json; bug #827861
+    doins out/Release/vk_swiftshader_icd.json
+
+	if [[ -d out/Release/swiftshader ]]; then
+		insinto "${install_dir}/swiftshader"
+		doins out/Release/swiftshader/*.so
+	fi
+
 	# NPM
+	insinto "${install_dir}"
 	doins -r "${NODE_S}/deps/npm"
 	fperms -R 755 "${install_dir}/npm/bin/"
 
